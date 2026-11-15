@@ -1,0 +1,31 @@
+---
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
+
+interface Props {
+  title: string;
+  id?: string;
+  href?: string;
+  linkLabel?: string;
+  /** Small mono note on the right when there is no link, e.g. a member count. */
+  note?: string;
+  level?: 2 | 3;
+  class?: string;
+}
+
+const { title, id, href, linkLabel, note, level = 2, class: className } = Astro.props;
+const Heading = level === 2 ? 'h2' : 'h3';
+---
+
+<div class:list={['section-head', className]} data-viewport-reveal>
+  <Heading id={id} class="section-label">{title}</Heading>
+  <span class="section-rule" aria-hidden="true"></span>
+  {href && linkLabel ? (
+    <a href={href} class="text-link">
+      {linkLabel}
+      <HugeiconsIcon icon={ArrowRight02Icon} size={13} />
+    </a>
+  ) : note ? (
+    <span class="type-label">{note}</span>
+  ) : null}
+</div>

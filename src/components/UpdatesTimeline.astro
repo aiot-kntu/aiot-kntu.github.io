@@ -1,0 +1,50 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { formatDate } from '@/lib/settings';
+
+interface Props {
+  items: CollectionEntry<'updates'>[];
+  headingLevel?: 2 | 3;
+}
+
+const { items, headingLevel = 2 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+---
+
+<div>
+  {items.map(async (item, index) => {
+    const { Content } = await render(item);
+    return (
+      <article
+        data-viewport-reveal
+        data-reveal-delay={(index % 4) * 75}
+        class:list={[
+          'flex flex-col gap-2 py-6 sm:flex-row sm:gap-8',
+          index === 0 && 'pt-0',
+          index < items.length - 1 && 'border-b',
+        ]}
+      >
+        <time
+          datetime={item.data.date.toISOString()}
+          class="type-label shrink-0 sm:w-28 sm:pt-0.5"
+        >
+          {formatDate(item.data.date)}
+        </time>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <Heading class="type-item">
+            {item.data.link ? (
+              <a href={item.data.link} class="underline-offset-4 hover:underline">
+                {item.data.title}
+              </a>
+            ) : item.data.title}
+          </Heading>
+          <div class="content-prose mt-2">
+            <Content />
+          </div>
+        </div>
+      </article>
+    );
+  })}
+</div>

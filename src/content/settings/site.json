@@ -1,0 +1,133 @@
+{
+  "name": "The Intelligence of Things Lab",
+  "title": "The Intelligence of Things Lab | K. N. Toosi University of Technology",
+  "description": "The Intelligence of Things Lab at K. N. Toosi University of Technology. Research in distributed systems, IoT, Edge AI, Smart Cities, and Industry 4.0.",
+  "language": "en",
+  "locale": "en-US",
+  "favicon": "/favicon.svg",
+  "socialImage": "/og-image.png",
+  "socialImageAlt": "The Intelligence of Things Lab logo: a globe with two antennas.",
+  "themeColor": { "light": "#ffffff", "dark": "#09090b" },
+  "affiliation": "Faculty of Computer Engineering, K. N. Toosi University of Technology",
+  "navigation": [
+    {
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "label": "News",
+      "href": "/news"
+    },
+    {
+      "label": "People",
+      "href": "/people"
+    },
+    {
+      "label": "Publications",
+      "href": "/publications"
+    },
+    {
+      "label": "Research",
+      "href": "/projects",
+      "aliases": [
+        "/research"
+      ]
+    },
+    {
+      "label": "Teaching",
+      "href": "/teaching"
+    }
+  ],
+  "footerLinks": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/aiot-kntu",
+      "icon": "github"
+    },
+    {
+      "label": "Google Scholar",
+      "href": "https://scholar.google.com/citations?user=dE_WsqwAAAAJ",
+      "icon": "scholar"
+    },
+    {
+      "label": "Teaching",
+      "href": "/teaching",
+      "icon": "arrow"
+    }
+  ],
+  "home": {
+    "eyebrow": "Faculty of Computer Engineering · K. N. Toosi University of Technology",
+    "title": "The Intelligence of Things Lab.",
+    "intro": "We study distributed systems, with a focus on IoT, Edge AI, Smart Cities and Industry 4.0. We love turning ideas into working systems—and sharing what we learn so others can build on it.",
+    "actions": [
+      {
+        "label": "Explore our research",
+        "href": "/projects",
+        "variant": "default",
+        "icon": "arrow"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/aiot-kntu",
+        "variant": "outline",
+        "icon": "github"
+      }
+    ],
+    "researchTitle": "Research",
+    "researchLink": {
+      "label": "All projects",
+      "href": "/projects"
+    },
+    "hardwareTitle": "Ideas, on real hardware.",
+    "hardwareIntro": "Our 30-node IoT testbed is built mainly on Nordic SoCs, with custom NRF-52833 boards and BLE tags. It’s where we put our ideas into practice.",
+    "publicationsTitle": "Publications",
+    "publicationsLink": {
+      "label": "All publications",
+      "href": "/publications"
+    },
+    "newsTitle": "News",
+    "newsLink": {
+      "label": "News archive",
+      "href": "/news"
+    }
+  },
+  "pages": {
+    "people": {
+      "title": "People.",
+      "description": "Our researchers and alumni at K. N. Toosi University of Technology."
+    },
+    "research": {
+      "title": "Research.",
+      "description": "Distributed systems, from BLE networks to programmable infrastructure."
+    },
+    "publications": {
+      "title": "Publications.",
+      "description": "Journal articles, submitted manuscripts and work in preparation."
+    },
+    "teaching": {
+      "title": "Teaching.",
+      "description": "Systems and the foundations of computer engineering.",
+      "sectionTitle": "Courses"
+    },
+    "news": {
+      "title": "News & updates.",
+      "description": "Defense sessions, research milestones, and announcements from the lab."
+    },
+    "notFound": {
+      "code": "404",
+      "title": "Page not found",
+      "description": "This page may have moved. Visit the home page to find your way back.",
+      "action": {
+        "label": "Return home",
+        "href": "/"
+      }
+    }
+  },
+  "branding": {
+    "mode": "animated",
+    "image": "/logo.svg",
+    "width": 160,
+    "height": 138,
+    "alt": "The Intelligence of Things Lab"
+  }
+}

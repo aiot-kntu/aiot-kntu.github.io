@@ -1,0 +1,42 @@
+{
+  "devices": [
+    {
+      "id": "thingy",
+      "number": "01",
+      "name": "Thingy:91",
+      "role": "Sense & prototype",
+      "description": "A battery-powered prototyping platform with environmental sensors, an nRF9160 cellular SiP and an nRF52840 for Bluetooth LE and USB.",
+      "photo": "/images/hardware/thingy91.jpg",
+      "spec": "Sensors · Bluetooth LE · cellular IoT"
+    },
+    {
+      "id": "dk",
+      "number": "02",
+      "name": "nRF52840 DK",
+      "role": "Build & experiment",
+      "description": "Our development-board workhorse: a programmable nRF52840 radio, accessible GPIO, onboard debugging, and four user buttons and LEDs.",
+      "photo": "/images/hardware/nrf52840.jpg",
+      "spec": "Bluetooth LE · 802.15.4 · GPIO"
+    },
+    {
+      "id": "dongle",
+      "number": "03",
+      "name": "USB Dongle",
+      "role": "Connect & observe",
+      "description": "A compact nRF52840 board that brings a programmable multiprotocol radio to a USB port. A small bridge between a computer and wireless experiments.",
+      "photo": "/images/hardware/nrf52840-dongle.webp",
+      "spec": "nRF52840 · USB · 2.4 GHz radio"
+    }
+  ],
+  "defaultDevice": "dk",
+  "figureLabel": "Explore the lab’s hardware",
+  "figureNumber": "FIG. 01",
+  "figureTitle": "THE TESTBED",
+  "status": "30-NODE LAB",
+  "selectionHint": "Select a device to look closer",
+  "selectionLabel": "Select a hardware device",
+  "photoLabel": "See the real board",
+  "photoAlt": "Original lab website photo of the {name}",
+  "illustrationLabel": "Isometric workbench with a Thingy:91, nRF52840 development kit, and USB dongle. Select a device below to explore it.",
+  "nameplate": "IOT / 030"
+}

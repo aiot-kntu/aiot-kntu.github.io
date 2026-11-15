@@ -1,0 +1,39 @@
+---
+import { ui, text } from '@/lib/settings';
+interface Props {
+  name: string;
+  image?: string;
+  size?: 'director' | 'researcher' | 'alumni';
+  eager?: boolean;
+}
+
+const { name, image, size = 'researcher', eager = false } = Astro.props;
+const words = name.trim().split(/\s+/);
+const initials = `${words[0][0]}${words.at(-1)![0]}`.toUpperCase();
+const sizes = {
+  director: 'h-28 w-24 text-xl sm:h-32 sm:w-28',
+  researcher: 'h-16 w-14 text-base',
+  alumni: 'h-14 w-12 text-sm',
+};
+---
+
+<div class:list={[
+  'relative shrink-0 overflow-hidden rounded-xl bg-muted',
+  sizes[size],
+]}>
+  <div class:list={['relative h-full w-full overflow-hidden rounded-[inherit]']}>
+    <span aria-hidden="true" class="absolute inset-0 flex items-center justify-center font-mono font-normal tracking-tight text-muted-foreground">{initials}</span>
+    {image && (
+      <img
+        src={image}
+        alt={text(ui.portraitLabel, { name })}
+        width="240"
+        height="300"
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+        data-person-portrait
+      />
+    )}
+  </div>
+</div>

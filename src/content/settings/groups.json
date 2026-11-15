@@ -1,0 +1,22 @@
+[
+  {
+    "id": "director",
+    "title": "Director",
+    "label": "Director"
+  },
+  {
+    "id": "phd",
+    "title": "PhD researchers",
+    "label": "PhD"
+  },
+  {
+    "id": "msc",
+    "title": "MSc researchers",
+    "label": "MSc"
+  },
+  {
+    "id": "alumni",
+    "title": "Alumni",
+    "label": "Alumni"
+  }
+]

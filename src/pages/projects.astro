@@ -1,0 +1,83 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { getResearch } from '@/lib/content';
+import { site, ui, text, pageTitle } from '@/lib/settings';
+import { render } from 'astro:content';
+
+const topics = await getResearch();
+const page = site.pages.research;
+---
+<Layout title={pageTitle(page.title)} description={page.description}>
+  <div>
+    <PageHeader {...page}>
+      <nav aria-label={ui.researchTopics} class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+        {topics.map((topic, index) => <a href={`#${topic.id}`} class="text-[13px] font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">{topic.data.shortTitle} <span class="ml-1 font-mono text-xs opacity-60">{String(index + 1).padStart(2, '0')}</span></a>)}
+      </nav>
+    </PageHeader>
+    <div class="space-y-20 sm:space-y-28">
+      {topics.map(async (topic, index) => {
+        const { Content } = await render(topic);
+        return <section id={topic.id} aria-labelledby={`${topic.id}-title`} class="scroll-mt-8">
+          <div data-viewport-reveal>
+            <p class="type-label">{String(index + 1).padStart(2, '0')} · {topic.data.area}</p>
+            <h2 id={`${topic.id}-title`} class="type-section mt-3 text-pretty leading-snug">{topic.data.title}</h2>
+            {topic.data.focus && <p class="mt-2 text-[15px] leading-relaxed text-foreground">{topic.data.focus}</p>}
+            <div class="content-prose mt-4"><Content /></div>
+          </div>
+
+          {topic.data.studies.length > 0 && <div class="mt-10">
+            <SectionHead title={ui.studies} level={3} note={String(topic.data.studies.length).padStart(2, '0')} />
+            <div>
+              {topic.data.studies.map((study, i) => {
+                const Row = study.code ? 'a' : 'div';
+                return <Row
+                  href={study.code}
+                  target={study.code ? '_blank' : undefined}
+                  rel={study.code ? 'noopener noreferrer' : undefined}
+                  aria-label={study.code ? text(ui.viewCodeLabel, { title: study.title }) : undefined}
+                  class="list-row py-3.5"
+                  data-viewport-reveal
+                  data-reveal-delay={(i % 4) * 60}
+                >
+                  <span class="list-row-text">
+                    <span class="list-row-title block text-pretty leading-snug">{study.title}</span>
+                    <span class="type-meta mt-1 block">{study.researcher}{study.date && ` · ${study.date}`}</span>
+                  </span>
+                  {study.code && <span class="list-row-meta">{ui.viewCode} ↗</span>}
+                </Row>;
+              })}
+            </div>
+          </div>}
+
+          {topic.publications.length > 0 && <div class="mt-10">
+            <SectionHead title={ui.relatedPublications} level={3} note={String(topic.publications.length).padStart(2, '0')} />
+            <div>
+              {topic.publications.map((pub, i) => {
+                const paperUrl = pub.url || (pub.doi ? `https://doi.org/${pub.doi}` : undefined);
+                const Row = paperUrl ? 'a' : 'div';
+                return <Row
+                  href={paperUrl}
+                  target={paperUrl ? '_blank' : undefined}
+                  rel={paperUrl ? 'noopener noreferrer' : undefined}
+                  aria-label={paperUrl ? text(ui.readPaperLabel, { title: pub.title }) : undefined}
+                  class="list-row py-3.5"
+                  data-viewport-reveal
+                  data-reveal-delay={(i % 4) * 60}
+                >
+                  <span class="list-row-text">
+                    <span class="list-row-title block text-pretty leading-snug">{pub.title}</span>
+                    <span class="type-meta mt-1 block">{pub.authors.join(', ')}</span>
+                    <span class="type-label mt-0.5 block">{[pub.venue, pub.year].filter(Boolean).join(' · ')}</span>
+                  </span>
+                  {paperUrl && <span class="list-row-meta">{ui.readPaper} ↗</span>}
+                </Row>;
+              })}
+            </div>
+          </div>}
+        </section>;
+      })}
+    </div>
+  </div>
+</Layout>

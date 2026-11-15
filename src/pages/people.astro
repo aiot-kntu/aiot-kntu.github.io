@@ -1,0 +1,58 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import PersonPortrait from '@/components/PersonPortrait.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { getMembers } from '@/lib/content';
+import { site, ui, pageTitle } from '@/lib/settings';
+import { render } from 'astro:content';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
+const groups = (await getMembers()).filter(group => group.people.length);
+const page = site.pages.people;
+---
+<Layout title={pageTitle(page.title)} description={page.description}>
+  <div>
+    <PageHeader {...page}>
+      <nav aria-label={ui.peopleSections} class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+        {groups.map(group => <a href={`#${group.id}`} class="text-[13px] font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">{group.label} <span class="ml-1 font-mono text-xs opacity-60">{String(group.people.length).padStart(2, '0')}</span></a>)}
+      </nav>
+    </PageHeader>
+    <div class="space-y-16 sm:space-y-20">
+      {groups.map(group => (
+        <section id={group.id} aria-labelledby={`${group.id}-title`} class="scroll-mt-8">
+          <SectionHead id={`${group.id}-title`} title={group.title} note={String(group.people.length).padStart(2, '0')} class="mb-2" />
+          <ul role="list" class:list={['grid list-none gap-x-10', { 'sm:grid-cols-2': group.id !== 'director' }]}>
+            {group.people.map(async (person, index) => {
+              const { Content } = await render(person);
+              return <li data-viewport-reveal data-reveal-delay={(index % 4) * 75}>
+                <article class:list={['flex h-full items-start gap-5 py-6', { 'sm:gap-8 sm:py-8': group.id === 'director' }]}>
+                  <PersonPortrait name={person.data.name} image={person.data.image} size={group.id === 'director' ? 'director' : group.id === 'alumni' ? 'alumni' : 'researcher'} eager={group.id === 'director'} />
+                  <div class="min-w-0 flex-1">
+                    {person.data.eyebrow && <p class="type-label mb-1 uppercase">{person.data.eyebrow}</p>}
+                    <h3 class:list={['font-medium leading-snug', group.id === 'director' ? 'text-xl' : 'text-base']}>{person.data.name}</h3>
+                    <p class="type-meta mt-1">{person.data.role}{person.data.year && ` · ${person.data.year}`}</p>
+                    {person.data.affiliation && <p class="type-meta">{person.data.affiliation}</p>}
+                    {person.data.topic && <p class="type-meta">{person.data.topic}</p>}
+                    {!person.body?.trim() && <div class="content-prose mt-3"><Content /></div>}
+                    {group.id === 'director' && person.data.profile && <a href={person.data.profile} target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1 text-[13px] font-medium underline underline-offset-4 hover:text-muted-foreground">{ui.profile}<HugeiconsIcon icon={ArrowUpRight01Icon} size={14} /></a>}
+                  </div>
+                </article>
+              </li>;
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</Layout>
+<script>
+  const checkPortraits = () => document.querySelectorAll<HTMLImageElement>('[data-person-portrait]').forEach(image => {
+    if (image.complete && image.naturalWidth === 0) image.hidden = true;
+  });
+  document.addEventListener('error', event => {
+    if (event.target instanceof HTMLImageElement && event.target.hasAttribute('data-person-portrait')) event.target.hidden = true;
+  }, true);
+  checkPortraits();
+  document.addEventListener('astro:page-load', checkPortraits);
+</script>

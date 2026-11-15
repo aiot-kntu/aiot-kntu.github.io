@@ -1,0 +1,224 @@
+---
+import '@/styles/global.css';
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import { site, ui } from '@/lib/settings';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Social preview image, relative to the site root. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  image = site.socialImage,
+  imageAlt = site.socialImageAlt,
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+// GitHub Pages serves folders, so /people redirects to /people/; match the sitemap.
+const path = Astro.url.pathname.endsWith('/') || Astro.url.pathname.includes('.') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="author" content={site.name} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Icons: SVG follows the colour scheme; ICO and PNGs cover older browsers and home screens. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href={site.favicon} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content={site.themeColor.light} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={site.themeColor.dark} media="(prefers-color-scheme: dark)" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Link previews (Open Graph is also read by LinkedIn, Telegram, Slack, WhatsApp). -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={site.locale.replace('-', '_')} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ResearchOrganization',
+      name: site.name,
+      url: Astro.site?.href,
+      logo: new URL('/icon-512.png', Astro.site).href,
+      description: site.description,
+      parentOrganization: { '@type': 'CollegeOrUniversity', name: 'K. N. Toosi University of Technology' },
+      sameAs: site.footerLinks.filter((link) => link.href.startsWith('http')).map((link) => link.href),
+    })} />
+    <ClientRouter />
+
+    <style is:global>
+      /* Theme switch circular reveal */
+      html[data-theme-transition] main {
+        /* Keep page-navigation snapshots inside the theme's root reveal. */
+        view-transition-name: none;
+      }
+      html[data-theme-transition] *,
+      html[data-theme-transition] *::before,
+      html[data-theme-transition] *::after {
+        /* Capture final colors, rather than an in-flight hover transition. */
+        transition: none !important;
+      }
+      html[data-theme-transition]::view-transition-old(root),
+      html[data-theme-transition]::view-transition-new(root) {
+        mix-blend-mode: normal;
+      }
+      html[data-theme-transition]::view-transition-old(root) {
+        animation: none;
+      }
+      html[data-theme-transition]::view-transition-new(root) {
+        animation: theme-reveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+      }
+      html[data-theme-transition]::view-transition-group(theme-selection) {
+        animation-duration: 0.3s;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      html[data-theme-transition]::view-transition-old(theme-selection),
+      html[data-theme-transition]::view-transition-new(theme-selection) {
+        animation-duration: 0.15s;
+        mix-blend-mode: normal;
+      }
+      @keyframes theme-reveal {
+        from {
+          clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
+        }
+        to {
+          clip-path: circle(150% at var(--theme-x, 50%) var(--theme-y, 50%));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-theme-transition]::view-transition-new(root) {
+          animation: none;
+          clip-path: none;
+        }
+      }
+      #page-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+        background: hsl(var(--primary));
+        z-index: 50;
+        opacity: 0;
+        transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+        view-transition-name: route-progress;
+        pointer-events: none;
+      }
+      ::view-transition-old(route-progress),
+      ::view-transition-new(route-progress) {
+        animation: none;
+        mix-blend-mode: normal;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #page-progress { transition: none; }
+      }
+      main {
+        view-transition-name: main-content;
+      }
+
+      /* Page change: the old page blurs away, the new one comes into focus. */
+      ::view-transition-old(main-content) {
+        animation: vt-blur-out 0.2s cubic-bezier(0.4, 0, 1, 1) both;
+      }
+      ::view-transition-new(main-content) {
+        animation: vt-blur-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+      }
+
+      @keyframes vt-blur-out {
+        from { opacity: 1; filter: blur(0); }
+        to   { opacity: 0; filter: blur(8px); }
+      }
+      @keyframes vt-blur-in {
+        from { opacity: 0; filter: blur(8px); transform: translateY(4px); }
+        to   { opacity: 1; filter: blur(0); transform: translateY(0); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(main-content),
+        ::view-transition-new(main-content) {
+          animation: none !important;
+        }
+      }
+    </style>
+
+    <!-- Fonts: Geist for everything, Geist Mono for labels and dates -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Theme initialization script to prevent FOUC -->
+    <script is:inline>
+      function applyTheme() {
+        const theme = localStorage.getItem('theme');
+        const isDark =
+          theme === 'dark' ||
+          (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    </script>
+  </head>
+  <body class="flex min-h-screen flex-col font-sans">
+    <a href="#main-content" class="sr-only fixed left-4 top-4 z-50 rounded-full bg-primary px-4 py-3 text-primary-foreground focus:not-sr-only">{ui.skipToContent}</a>
+    <Navbar />
+    <main id="main-content" tabindex="-1" class="mx-auto w-full max-w-[600px] flex-1 px-5 sm:px-6">
+      <slot />
+    </main>
+    <Footer transition:persist="site-footer" />
+    <script>
+      import { initViewportReveals, stopViewportReveals } from '@/lib/viewport-reveal';
+      document.addEventListener('astro:page-load', initViewportReveals);
+      document.addEventListener('astro:before-swap', stopViewportReveals);
+    </script>
+
+    <div id="page-progress" aria-hidden="true" transition:persist="route-progress"></div>
+    <script>
+      import { installRouteProgress } from '@/lib/route-progress';
+      const dispose = installRouteProgress();
+      if (import.meta.hot) import.meta.hot.dispose(dispose);
+    </script>
+  </body>
+</html>

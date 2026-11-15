@@ -1,0 +1,11 @@
+---
+import { site } from '@/lib/settings';
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+---
+<header class="page-intro pb-12 sm:pb-16" data-viewport-reveal>
+  <p class="type-label">{site.name}</p>
+  <h1 class="type-title mt-3">{title}</h1>
+  <p class="type-lead mt-3">{description}</p>
+  <slot />
+</header>

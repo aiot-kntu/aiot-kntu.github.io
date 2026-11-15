@@ -1,0 +1,13 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getPublications } from '@/lib/content';
+import { site, pageTitle } from '@/lib/settings';
+import { PublicationList } from '@/components/PublicationList';
+const publications = await getPublications();
+const page = site.pages.publications;
+---
+<Layout title={pageTitle(page.title)} description={page.description}>
+  <div>
+    <PublicationList client:load publications={publications} page={page} />
+  </div>
+</Layout>

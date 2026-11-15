@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn/ui Zinc: one semantic palette, shared by every page. */
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 93.5%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.75rem;
+  }
+  .dark {
+    color-scheme: dark;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 13%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-background text-foreground antialiased; min-height: 100dvh; }
+  ::selection { @apply bg-primary text-primary-foreground; }
+  :focus-visible { @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background; }
+  button, a, summary { -webkit-tap-highlight-color: transparent; }
+  p { text-wrap: pretty; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}
+@layer components {
+  /*
+   * Type scale — every page picks from these instead of ad-hoc sizes.
+   * Four sizes carry the whole site: 12 (mono labels), 13 (meta), 15 (text),
+   * and 20 / 30 for the few headings. One family (Geist), mono only for labels.
+   * Headings stay at medium weight so size, not boldness, sets the hierarchy.
+   */
+  .type-display { @apply text-balance text-[30px] font-medium leading-[1.2] tracking-[-0.02em]; }
+  .type-title { @apply text-balance text-[30px] font-medium leading-[1.2] tracking-[-0.02em]; }
+  .type-section { @apply text-xl font-medium tracking-[-0.01em]; }
+  .type-item { @apply text-pretty text-[15px] font-medium leading-snug; }
+  .type-lead { @apply text-[15px] leading-[1.7] text-foreground/75; }
+  .type-body { @apply text-[15px] leading-[1.7] text-muted-foreground; }
+  .type-meta { @apply text-[13px] leading-relaxed text-muted-foreground; }
+  .type-label { @apply font-mono text-xs leading-relaxed tracking-wide text-muted-foreground; }
+
+  /*
+   * Spacing rhythm — 8px grid. Sections sit 56 → 80px apart,
+   * a section's heading sits 24px above its content.
+   */
+  .page-intro { @apply pb-4 pt-10 sm:pt-16; }
+  .page-section { @apply pt-14 sm:pt-20; }
+  .section-head { @apply mb-4 flex h-5 items-center gap-3; }
+  .section-label { @apply shrink-0 text-[15px] font-medium text-foreground; }
+  /* Dotted rule that draws itself in as the heading scrolls into view. */
+  .section-rule {
+    @apply h-px min-w-3 flex-1;
+    background-image: radial-gradient(circle, hsl(var(--muted-foreground) / 0.45) 0.6px, transparent 0.9px);
+    background-size: 5px 1px;
+    background-repeat: repeat-x;
+    transform-origin: left center;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .section-rule {
+        animation: rule-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 30%;
+      }
+    }
+  }
+
+  /*
+   * Compact list row: title and short note on one line, mono marker on the
+   * right. A soft surface fades in on hover instead of extra lines.
+   */
+  .list-row {
+    @apply relative flex min-h-11 items-baseline gap-4 py-2.5;
+  }
+  .list-row + .list-row { @apply border-t; }
+  .list-row::before {
+    content: '';
+    @apply pointer-events-none absolute -inset-x-3 inset-y-0 -z-10 rounded-lg bg-accent opacity-0;
+    transform: scaleX(0.97);
+    transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  a.list-row:hover::before, a.list-row:focus-visible::before { opacity: 1; transform: none; }
+  .list-row-text { @apply min-w-0 flex-1 transition-transform duration-300; }
+  a.list-row:hover .list-row-text { transform: translateX(4px); }
+  .list-row-title { @apply font-medium text-foreground; }
+  .list-row-note { @apply text-muted-foreground; }
+  .list-row-meta { @apply shrink-0 font-mono text-xs tabular-nums text-muted-foreground transition-colors; }
+  a.list-row:hover .list-row-meta { @apply text-foreground; }
+  
+  .text-link { @apply inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground; }
+
+  .content-prose { @apply text-[15px] leading-[1.75] text-foreground/75; }
+  .content-prose > * + * { margin-top: 1rem; }
+  .content-prose :is(h2,h3,h4) { @apply font-medium text-foreground; }
+  .content-prose a { @apply text-foreground underline underline-offset-4; }
+  .content-prose :is(ul,ol) { padding-left: 1.25rem; }
+  .content-prose ul { list-style-type: disc; }
+  .content-prose ol { list-style-type: decimal; }
+  .content-prose img { @apply h-auto max-w-full rounded-lg; }
+  .content-prose blockquote { @apply border-l-2 pl-4; }
+  .content-prose pre { @apply overflow-x-auto rounded-lg bg-muted p-4 text-xs; }
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 9999px; }
+@keyframes rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }

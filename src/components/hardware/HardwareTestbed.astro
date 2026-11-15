@@ -1,0 +1,227 @@
+---
+import art from './art.svg?raw';
+import './hardware.css';
+
+import hardware from '@/content/settings/hardware.json';
+import { text } from '@/lib/settings';
+import { buttonVariants } from '@/components/ui/button';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Image01Icon, ArrowDown01Icon } from '@hugeicons/core-free-icons';
+
+const { devices } = hardware;
+const selected = devices.find(device => device.id === hardware.defaultDevice) ?? devices[0];
+---
+
+<iot-testbed id="hardware" class="hardware-testbed block">
+  <figure class="m-0" aria-label={hardware.figureLabel}>
+    <div class="hardware-plate overflow-hidden rounded-xl border border-border bg-card">
+      <div class="flex items-center justify-between gap-3 px-5 pt-5 font-mono text-xs tracking-wide text-muted-foreground">
+        <span>{hardware.figureNumber} <span class="mx-1 opacity-40">/</span> {hardware.figureTitle}</span>
+        <span class="flex items-center gap-1.5"><span class="hardware-status-dot"></span>{hardware.status}</span>
+      </div>
+
+      <div class="hardware-stage" set:html={art} />
+
+      <div class="flex flex-wrap items-center justify-between gap-2 px-5 pb-4 text-xs text-muted-foreground">
+        <span>{hardware.selectionHint}</span>
+        <span class="hardware-selection font-mono" data-selection>{selected && `${selected.number} / ${selected.name}`}</span>
+      </div>
+
+      <div class="hardware-choices flex flex-wrap gap-2 border-t border-border p-3" role="group" aria-label={hardware.selectionLabel}>
+        <span class="hardware-blob" aria-hidden="true"></span>
+        {devices.map(device => (
+          <button type="button" data-select={device.id} aria-pressed={device.id === selected?.id} class={buttonVariants({ variant: 'ghost', size: 'sm', className: 'hardware-choice flex-1 gap-2 px-3 text-left hover:bg-transparent' })}>
+            <span class="hardware-choice-number block font-mono text-xs text-muted-foreground">{device.number}</span>
+            <span class="hardware-choice-name block text-xs font-medium text-muted-foreground sm:text-[13px]">{device.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <figcaption class="pt-4">
+      {devices.map(device => (
+        <div data-panel={device.id} hidden={device.id !== selected?.id} class="hardware-details">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p class="text-[13px] font-medium text-muted-foreground">{device.role}</p>
+            <span class="font-mono text-xs text-muted-foreground">{device.spec}</span>
+          </div>
+          <p class="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-muted-foreground">{device.description}</p>
+          <details class="hardware-photo mt-2">
+            <summary aria-controls={`hardware-photo-${device.id}`} class={buttonVariants({ variant: 'outline', size: 'sm', className: 'hardware-photo-toggle cursor-pointer gap-2 text-muted-foreground' })}>
+              <HugeiconsIcon icon={Image01Icon} size={14} />
+              {hardware.photoLabel}
+              <HugeiconsIcon icon={ArrowDown01Icon} size={13} className="hardware-photo-chevron transition-transform duration-200" />
+            </summary>
+            <div id={`hardware-photo-${device.id}`} class="hardware-photo-content overflow-hidden">
+              <div class="pt-3"><div class="flex items-center justify-center rounded-lg border bg-card p-4">
+              <img src={device.photo} alt={text(hardware.photoAlt, { name: device.name })} loading="eager" decoding="async" width="320" height="240" class="max-h-52 w-auto max-w-full object-contain" />
+              </div></div>
+            </div>
+          </details>
+        </div>
+      ))}
+
+    </figcaption>
+  </figure>
+</iot-testbed>
+
+<script>
+  import hardware from '@/content/settings/hardware.json';
+
+  class IotTestbed extends HTMLElement {
+    private dispose?: () => void;
+
+    connectedCallback() {
+      const controls = [...this.querySelectorAll<HTMLButtonElement>('[data-select]')];
+      const parts = [...this.querySelectorAll<SVGGElement>('[data-device]')];
+      const panels = [...this.querySelectorAll<HTMLElement>('[data-panel]')];
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const abort = new AbortController();
+      const { signal } = abort;
+      const photoAnimations = new Map<HTMLDetailsElement, Animation>();
+      const photoReady = new Map<HTMLDetailsElement, Promise<void>>();
+      const settlePhotos = () => {
+        photoAnimations.forEach((animation, details) => {
+          details.open = details.querySelector('summary')?.getAttribute('aria-expanded') === 'true';
+          animation.cancel();
+        });
+        photoAnimations.clear();
+      };
+      this.querySelectorAll<HTMLDetailsElement>('.hardware-photo').forEach(details => {
+        const summary = details.querySelector('summary')!;
+        const content = details.querySelector<HTMLElement>('.hardware-photo-content')!;
+        const image = content.querySelector('img')!;
+        image.loading = 'eager';
+        photoReady.set(details, image.decode().catch(() => {}));
+        summary.setAttribute('aria-expanded', String(details.open));
+        summary.addEventListener('click', event => {
+          event.preventDefault();
+          const expanded = summary.getAttribute('aria-expanded') !== 'true';
+          photoAnimations.get(details)?.cancel();
+          photoAnimations.delete(details);
+          summary.setAttribute('aria-expanded', String(expanded));
+          if (reduced.matches || !('animate' in content)) {
+            details.open = expanded;
+            return;
+          }
+          const animatePhoto = () => {
+            if (summary.getAttribute('aria-expanded') !== String(expanded)) return;
+            const height = details.open ? content.getBoundingClientRect().height : 0;
+            const opacity = details.open ? getComputedStyle(content).opacity : '0';
+            details.open = true;
+            const animation = content.animate([
+              { height: `${height}px`, opacity },
+              { height: `${expanded ? content.scrollHeight : 0}px`, opacity: expanded ? 1 : 0 },
+            ], { duration: 240, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'both' });
+            photoAnimations.set(details, animation);
+            const complete = () => {
+              if (photoAnimations.get(details) !== animation) return;
+              photoAnimations.delete(details);
+              details.open = expanded;
+              animation.cancel();
+            };
+            animation.finished.then(complete, () => {});
+          };
+          if (expanded) {
+            void photoReady.get(details)?.then(animatePhoto);
+          } else {
+            animatePhoto();
+          }
+        }, { signal });
+        details.addEventListener('toggle', () => {
+          if (!photoAnimations.has(details)) summary.setAttribute('aria-expanded', String(details.open));
+        }, { signal });
+      });
+      const names: Record<string, string> = Object.fromEntries(hardware.devices.map(device => [device.id, `${device.number} / ${device.name}`]));
+
+      const blob = this.querySelector<HTMLSpanElement>('.hardware-blob');
+      const container = this.querySelector<HTMLElement>('.hardware-choices');
+      let currentDevice: string = hardware.defaultDevice || hardware.devices[0]?.id;
+      let hoveredTarget: HTMLElement | null = null;
+      let initialized = false;
+
+      const positionBlob = (target: HTMLElement | null, immediate = false) => {
+        if (!blob || !container || !target) return;
+        const cr = container.getBoundingClientRect();
+        const tr = target.getBoundingClientRect();
+        if (tr.width === 0 && tr.height === 0) return;
+
+        if (immediate || !initialized) {
+          blob.style.transition = 'none';
+        }
+        const x = tr.left - cr.left + container.scrollLeft;
+        const y = tr.top - cr.top + container.scrollTop;
+        blob.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        blob.style.width = `${tr.width}px`;
+        blob.style.height = `${tr.height}px`;
+        blob.style.opacity = '1';
+
+        if (immediate || !initialized) {
+          blob.offsetHeight;
+          blob.style.transition = '';
+          if (!immediate) initialized = true;
+        }
+      };
+
+      const getSelectedButton = () => controls.find(c => c.dataset.select === currentDevice) ?? null;
+
+      const syncBlobToSelected = (immediate = false) => {
+        positionBlob(getSelectedButton(), immediate);
+      };
+
+      const select = (device: string) => {
+        if (!(device in names)) return;
+        currentDevice = device;
+        for (const part of parts) part.toggleAttribute('data-selected', part.dataset.device === device);
+        for (const control of controls) control.setAttribute('aria-pressed', String(control.dataset.select === device));
+        for (const panel of panels) panel.hidden = panel.dataset.panel !== device;
+        this.querySelector('[data-selection]')!.textContent = names[device];
+        syncBlobToSelected();
+      };
+
+      container?.addEventListener('pointermove', event => {
+        const target = (event.target as Element).closest<HTMLButtonElement>('[data-select]');
+        if (target && target !== hoveredTarget) {
+          hoveredTarget = target;
+          positionBlob(target);
+        }
+      }, { signal });
+
+      container?.addEventListener('pointerleave', () => {
+        hoveredTarget = null;
+        syncBlobToSelected();
+      }, { signal });
+
+      this.addEventListener('click',event => {
+        const target = event.target as Element;
+        const control = target.closest<HTMLElement>('[data-select]');
+        const part = target.closest<SVGElement>('[data-device]');
+        const device = control?.dataset.select ?? part?.dataset.device;
+        if (device && device !== 'stand') select(device);
+      },{signal});
+      this.addEventListener('keydown',event => {
+        const index = controls.indexOf(event.target as HTMLButtonElement);
+        if(index < 0) return;
+        let next=index;
+        if(event.key==='ArrowRight') next=(index+1)%controls.length;
+        else if(event.key==='ArrowLeft') next=(index+controls.length-1)%controls.length;
+        else if(event.key==='Home') next=0;
+        else if(event.key==='End') next=controls.length-1;
+        else return;
+        event.preventDefault(); controls[next].focus(); select(controls[next].dataset.select!);
+      },{signal});
+      reduced.addEventListener('change', () => { if (reduced.matches) settlePhotos(); }, { signal });
+      const ro = new ResizeObserver(() => {
+        positionBlob(hoveredTarget || getSelectedButton(), true);
+      });
+      if (container) ro.observe(container);
+      const initialDevice = hardware.devices.find(device => device.id === hardware.defaultDevice) ?? hardware.devices[0];
+      if (initialDevice) select(initialDevice.id);
+      this.dispose=() => { abort.abort(); ro.disconnect(); settlePhotos(); };
+    }
+
+    disconnectedCallback() { this.dispose?.(); }
+  }
+
+  if (!customElements.get('iot-testbed')) customElements.define('iot-testbed',IotTestbed);
+</script>

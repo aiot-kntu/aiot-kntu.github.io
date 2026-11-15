@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import UpdatesTimeline from '@/components/UpdatesTimeline.astro';
+import { getUpdates } from '@/lib/content';
+import { site, pageTitle } from '@/lib/settings';
+const updates = await getUpdates();
+const page = site.pages.news;
+---
+<Layout title={pageTitle(page.title)} description={page.description}>
+  <div>
+    <PageHeader {...page} />
+    <UpdatesTimeline items={updates} />
+  </div>
+</Layout>

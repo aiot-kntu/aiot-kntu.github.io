@@ -1,0 +1,14 @@
+/* The four meridians animate natively in SVG; the frame and type stay still. */
+[data-logo-loop='true'] .logo-rest-meridian {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loop-meridians {
+    display: none;
+  }
+
+  [data-logo-loop='true'] .logo-rest-meridian {
+    display: initial;
+  }
+}

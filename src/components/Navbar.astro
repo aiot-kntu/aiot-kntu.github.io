@@ -1,0 +1,32 @@
+---
+import { LogoMorphIntro } from './LogoMorphIntro';
+import { HeaderNav } from './HeaderNav';
+import { ThemeToggle } from './ThemeToggle';
+
+import { site, ui, text } from '@/lib/settings';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="w-full pb-2 pt-10 sm:pt-14">
+  <div class="relative mx-auto flex max-w-[600px] flex-col items-center px-5 sm:px-6">
+    <!-- Top-right theme toggle matching Figma -->
+    <div class="absolute right-4 top-0 z-10 sm:right-6">
+      <ThemeToggle client:load />
+    </div>
+
+    <!-- Centered Animated Logo with SVG Morph & Intro -->
+    <a
+      href="/"
+      class="group inline-flex flex-col items-center"
+      aria-label={text(ui.homeLink, { name: site.name })}
+    >
+      <LogoMorphIntro client:load transition:persist="kntu-logo" />
+    </a>
+
+    <!-- Centered floating navigation tabs -->
+    <div class="mt-6 flex justify-center" transition:persist="header-nav">
+      <HeaderNav client:load currentPath={currentPath} />
+    </div>
+  </div>
+</header>

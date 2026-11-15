@@ -1,0 +1,18 @@
+---
+import { site, ui } from '@/lib/settings';
+import { buttonVariants } from '@/components/ui/button';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight02Icon, ArrowUp02Icon, GithubIcon, GraduationCapIcon } from '@hugeicons/core-free-icons';
+const icons = { github: GithubIcon, scholar: GraduationCapIcon, arrow: ArrowRight02Icon };
+---
+<footer class="mt-24 border-t py-10 sm:mt-32">
+  <div class="mx-auto flex max-w-[600px] flex-col gap-6 px-5 sm:px-6">
+    <div class="-ml-3 flex flex-wrap gap-1">
+      {site.footerLinks.map(link => <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined} class={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-muted-foreground' })}><HugeiconsIcon icon={icons[link.icon as keyof typeof icons] ?? ArrowRight02Icon} size={14} />{link.label}</a>)}
+    </div>
+    <div class="flex flex-col items-start justify-between gap-4 sm:flex-row">
+      <div class="space-y-1 text-[13px] leading-relaxed"><p class="font-medium">{site.name}</p><p class="max-w-[44ch] text-muted-foreground">{site.affiliation}</p></div>
+      <button onclick="window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'})" type="button" class={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ml-3 shrink-0 text-muted-foreground sm:ml-0' })}>{ui.backToTop}<HugeiconsIcon icon={ArrowUp02Icon} size={13} /></button>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,145 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import HardwareTestbed from "@/components/hardware/HardwareTestbed.astro";
+import UpdatesTimeline from "@/components/UpdatesTimeline.astro";
+import { buttonVariants } from "@/components/ui/button";
+import SectionHead from "@/components/SectionHead.astro";
+import { site } from "@/lib/settings";
+import { getResearch, getPublications, getUpdates } from "@/lib/content";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowRight02Icon,
+  ArrowUpRight01Icon,
+  GithubIcon,
+} from "@hugeicons/core-free-icons";
+const [topics, allPublications, updates] = await Promise.all([
+  getResearch(),
+  getPublications(),
+  getUpdates(),
+]);
+const publications = allPublications.filter((pub) => pub.featured);
+const news = updates.filter((item) => item.data.featured);
+const home = site.home;
+---
+
+<Layout>
+  <section class="page-intro" data-viewport-reveal>
+    <p class="type-label">{home.eyebrow}</p>
+    <h1 class="type-display mt-3">{home.title}</h1>
+    <p class="type-lead mt-5">{home.intro}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      {
+        home.actions.map((action) => (
+          <a
+            href={action.href}
+            target={action.href.startsWith("http") ? "_blank" : undefined}
+            rel={
+              action.href.startsWith("http") ? "noopener noreferrer" : undefined
+            }
+            class={buttonVariants({
+              variant: action.variant === "outline" ? "outline" : "default",
+              size: "default",
+              className: "h-9 px-4 text-[13px]",
+            })}
+          >
+            {action.icon === "github" && (
+              <HugeiconsIcon icon={GithubIcon} size={15} />
+            )}
+            {action.label}
+            {action.icon !== "github" && (
+              <HugeiconsIcon icon={ArrowRight02Icon} size={14} />
+            )}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  {
+    topics.length > 0 && (
+      <section class="page-section">
+        <SectionHead
+          title={home.researchTitle}
+          href={home.researchLink.href}
+          linkLabel={home.researchLink.label}
+        />
+        <div>
+          {topics.map((topic, index) => (
+            <a
+              href={`${home.researchLink.href}#${topic.id}`}
+              data-viewport-reveal
+              data-reveal-delay={(index % 4) * 60}
+              class="list-row"
+            >
+              <span class="list-row-text">
+                <span class="list-row-title">{topic.data.title}</span>
+                {topic.data.focus && (
+                  <span class="list-row-note"> — {topic.data.focus}</span>
+                )}
+              </span>
+              <span class="list-row-meta">{String(index + 1).padStart(2, "0")}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+  <section class="page-section">
+    <SectionHead title={home.hardwareTitle} />
+    <p class="type-body mb-8 max-w-[60ch]" data-viewport-reveal>{home.hardwareIntro}</p>
+    <div data-viewport-reveal><HardwareTestbed /></div>
+  </section>
+  {
+    publications.length > 0 && (
+      <section class="page-section">
+        <SectionHead
+          title={home.publicationsTitle}
+          href={home.publicationsLink.href}
+          linkLabel={home.publicationsLink.label}
+        />
+        <div>
+          {publications.map((pub, index) => {
+            const paperUrl = pub.url || (pub.doi ? `https://doi.org/${pub.doi}` : undefined);
+            const Row = paperUrl ? "a" : "div";
+            return (
+              <Row
+                href={paperUrl}
+                target={paperUrl ? "_blank" : undefined}
+                rel={paperUrl ? "noopener noreferrer" : undefined}
+                data-viewport-reveal
+                data-reveal-delay={(index % 4) * 60}
+                class="list-row py-4"
+              >
+                <span class="list-row-text">
+                  <span class="type-label block">
+                    {[pub.year, pub.venue].filter(Boolean).join(" · ")}
+                  </span>
+                  <span class="list-row-title mt-1.5 block text-pretty leading-snug">{pub.title}</span>
+                  <span class="type-meta mt-1 block">{pub.authors.join(", ")}</span>
+                </span>
+                {paperUrl && (
+                  <HugeiconsIcon
+                    icon={ArrowUpRight01Icon}
+                    size={14}
+                    className="list-row-meta self-start"
+                  />
+                )}
+              </Row>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+  {
+    news.length > 0 && (
+      <section class="page-section">
+        <SectionHead
+          title={home.newsTitle}
+          href={home.newsLink.href}
+          linkLabel={home.newsLink.label}
+        />
+        <UpdatesTimeline items={news} headingLevel={3} />
+      </section>
+    )
+  }
+</Layout>
