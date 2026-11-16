@@ -9,7 +9,7 @@ authors:
 venue: Journal of Electrical and Computer Engineering Innovations (JECEI)
 doi: 10.22061/jecei.2020.6416.314
 citationAuthors: Oloomi, A. and Khanmirza, H.
-order: 7
+order: 6
 featured: false
 ---
 

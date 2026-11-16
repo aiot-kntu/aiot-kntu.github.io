@@ -27,7 +27,7 @@ export function HeaderNav({ currentPath }: Props) {
   return <nav className="flex flex-wrap justify-center gap-0.5 sm:gap-1" aria-label={ui.navigation} onMouseLeave={() => setHovered(null)}>
     {navItems.map(item => {
       const active = isItemActive(item, activePath);
-      return <Button key={item.href} asChild variant="ghost" size="sm" className={`relative h-11 px-2 text-xs hover:bg-transparent sm:px-3 sm:text-[13px] ${active ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground hover:text-foreground'}`}>
+      return <Button key={item.href} asChild variant="ghost" size="sm" className={`relative h-11 px-2 text-xs hover:bg-transparent sm:px-3 sm:text-[13px] ${active ? 'font-semibold text-brand' : 'font-normal text-muted-foreground hover:text-foreground'}`}>
         <a href={item.href} aria-current={active ? 'page' : undefined} onMouseEnter={() => { setHovered(item.href); playTickSound(1200, 0.015); }} onClick={event => {
           if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
           event.preventDefault();
@@ -36,7 +36,7 @@ export function HeaderNav({ currentPath }: Props) {
           playTickSound(800, 0.02);
           void navigate(item.href);
         }}>
-          {active && <motion.span aria-hidden="true" layoutId="active-nav-pill" className="pointer-events-none absolute inset-x-0 inset-y-2 rounded-md bg-foreground/[0.08]" transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 30 }} />}
+          {active && <motion.span aria-hidden="true" layoutId="active-nav-pill" className="pointer-events-none absolute inset-x-0 inset-y-2 rounded-md bg-brand/10" transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 30 }} />}
           {!active && hovered === item.href && <motion.span aria-hidden="true" layoutId="hover-nav-pill" className="pointer-events-none absolute inset-x-0 inset-y-2 rounded-md bg-foreground/[0.04]" transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 32 }} />}
           <span className="relative">{item.label}</span>
         </a>

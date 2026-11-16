@@ -15,7 +15,8 @@ studies:
     researcher: Reza Sarayloo
     date: February 2022
     code: https://github.com/iot-kntu/interpiconet-interference
-publicationIds: []
+publicationIds:
+  - khanmirza2022interpiconet
 order: 1
 ---
 We bring software-defined networking to IoT protocols and algorithms, and evaluate them on a real testbed.

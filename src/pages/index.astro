@@ -25,7 +25,7 @@ const home = site.home;
 <Layout>
   <section class="page-intro" data-viewport-reveal>
     <p class="type-label">{home.eyebrow}</p>
-    <h1 class="type-display mt-3">{home.title}</h1>
+    <h1 class="type-display mt-3">{home.title.replace(/\.$/, "")}{home.title.endsWith(".") && <span class="title-dot">.</span>}</h1>
     <p class="type-lead mt-5">{home.intro}</p>
     <div class="mt-8 flex flex-wrap gap-3">
       {

@@ -4,6 +4,7 @@ shortTitle: Rule compression
 area: Software-defined networks
 studies: []
 publicationIds:
+  - khanmirza2022m2
   - khanmirza2022wildminnie
 order: 2
 ---

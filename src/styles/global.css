@@ -12,8 +12,8 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 224 79% 45%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
@@ -24,8 +24,16 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5% 93.5%;
     --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --ring: 224 79% 45%;
     --radius: 0.75rem;
+    /*
+     * Lab palette, picked in OKLCH so every stop has matched lightness:
+     * cobalt #184ACE → azure #0099F2 → aqua #28D6DF → mint #2CDCAF.
+     * --brand is cobalt; --signal is mint darkened for text on white.
+     */
+    --brand: 224 79% 45%;
+    --signal: 167 100% 29%;
+    --brand-soft: 215 100% 97%;
   }
   .dark {
     color-scheme: dark;
@@ -35,8 +43,8 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 219 100% 72%;
+    --primary-foreground: 240 10% 3.9%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -47,7 +55,10 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 4% 13%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --ring: 219 100% 72%;
+    --brand: 219 100% 72%;
+    --signal: 163 71% 59%;
+    --brand-soft: 221 49% 14%;
   }
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
@@ -81,15 +92,18 @@
    * a section's heading sits 24px above its content.
    */
   .page-intro { @apply pb-4 pt-10 sm:pt-16; }
+  .page-intro > .type-label:first-child { @apply text-signal; }
+  /* Every page title ends with a teal full stop. */
+  .title-dot { @apply text-signal; }
   .page-section { @apply pt-14 sm:pt-20; }
   .section-head { @apply mb-4 flex h-5 items-center gap-3; }
   .section-label { @apply shrink-0 text-[15px] font-medium text-foreground; }
   /* Dotted rule that draws itself in as the heading scrolls into view. */
   .section-rule {
     @apply h-px min-w-3 flex-1;
-    background-image: radial-gradient(circle, hsl(var(--muted-foreground) / 0.45) 0.6px, transparent 0.9px);
-    background-size: 5px 1px;
-    background-repeat: repeat-x;
+    background: linear-gradient(in oklch 90deg, #184ACE, #0099F2 35%, #2CDCAF 70%, hsl(var(--muted-foreground) / 0.25));
+    -webkit-mask: radial-gradient(circle, #000 0.6px, transparent 0.9px) 0 0 / 5px 1px repeat-x;
+    mask: radial-gradient(circle, #000 0.6px, transparent 0.9px) 0 0 / 5px 1px repeat-x;
     transform-origin: left center;
   }
   @supports (animation-timeline: view()) {
@@ -112,7 +126,7 @@
   .list-row + .list-row { @apply border-t; }
   .list-row::before {
     content: '';
-    @apply pointer-events-none absolute -inset-x-3 inset-y-0 -z-10 rounded-lg bg-accent opacity-0;
+    @apply pointer-events-none absolute -inset-x-3 inset-y-0 -z-10 rounded-lg bg-brand-soft opacity-0;
     transform: scaleX(0.97);
     transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -122,14 +136,16 @@
   .list-row-title { @apply font-medium text-foreground; }
   .list-row-note { @apply text-muted-foreground; }
   .list-row-meta { @apply shrink-0 font-mono text-xs tabular-nums text-muted-foreground transition-colors; }
-  a.list-row:hover .list-row-meta { @apply text-foreground; }
+  a.list-row:hover .list-row-meta { @apply text-brand; }
+  a.list-row:hover .list-row-title { @apply text-brand; }
+  .list-row-title { transition: color 0.2s; }
   
-  .text-link { @apply inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground; }
+  .text-link { @apply inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-brand; }
 
   .content-prose { @apply text-[15px] leading-[1.75] text-foreground/75; }
   .content-prose > * + * { margin-top: 1rem; }
   .content-prose :is(h2,h3,h4) { @apply font-medium text-foreground; }
-  .content-prose a { @apply text-foreground underline underline-offset-4; }
+  .content-prose a { @apply text-brand underline decoration-brand/30 underline-offset-4 transition-colors hover:decoration-brand; }
   .content-prose :is(ul,ol) { padding-left: 1.25rem; }
   .content-prose ul { list-style-type: disc; }
   .content-prose ol { list-style-type: decimal; }

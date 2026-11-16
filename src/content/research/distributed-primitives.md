@@ -10,7 +10,9 @@ studies:
     researcher: Salman Maaroufi
     date: February 2022
     code: https://github.com/iot-kntu/controlled-BlueFlood
-publicationIds: []
+publicationIds:
+  - khanmirza2022leader
+  - khanmirza2022flood
 order: 0
 ---
 We implement and measure distributed algorithms in IoT networks, with a focus on Bluetooth Low Energy 5.0.

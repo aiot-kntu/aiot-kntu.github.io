@@ -1,12 +1,12 @@
 ---
-year: 2022
-status: submitted
-title: Reducing Inter-Piconet Interference in Bluetooth Low Energy 5 Networks
+year: 2024
+status: published
+title: "BlueMIC: Coordination for Mitigating Inter-Piconet Interference in BLE5 Networks"
 authors:
   - Hamed Khanmirza
-  - Reza Sarayloo
-citationAuthors: Khanmirza, Hamed and Sarayloo, Reza
-order: 4
+  - Peyman Teymoori
+venue: AUT Journal of Modeling and Simulation
+citationAuthors: Khanmirza, Hamed and Teymoori, Peyman
+order: 3
 featured: false
 ---
-

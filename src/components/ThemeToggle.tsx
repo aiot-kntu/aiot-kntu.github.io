@@ -64,40 +64,29 @@ export function ThemeToggle() {
   };
 
   if (!mounted) {
-    return <div className="h-11 w-16 opacity-0" />;
+    return <div className="h-11 w-11" />;
   }
 
+  const next = theme === 'dark' ? 'light' : 'dark';
+
   return (
-    <div
-      className="relative flex h-11 w-16 items-center"
-      role="group"
-      aria-label={ui.appearance}
+    <Button
+      type="button"
+      onClick={event => setThemeMode(next, event)}
+      variant="ghost"
+      size="icon"
+      className="group h-11 w-11 rounded-full text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+      aria-label={next === 'dark' ? ui.darkMode : ui.lightMode}
+      title={next === 'dark' ? ui.darkMode : ui.lightMode}
     >
-      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 h-8 -translate-y-1/2 rounded-full border" />
       <span
         aria-hidden="true"
-        data-theme-selection
-        className="pointer-events-none absolute left-[3px] top-1/2 z-10 grid h-[26px] w-[26px] place-items-center rounded-full bg-secondary text-foreground transition-transform duration-300 ease-out motion-reduce:transition-none"
-        style={{ transform: `translate(${theme === 'dark' ? 32 : 0}px, -50%)`, viewTransitionName: 'theme-selection' }}
+        className="grid place-items-center transition-transform duration-300 ease-out group-hover:rotate-[15deg] group-active:scale-90 motion-reduce:transition-none"
+        style={{ viewTransitionName: 'theme-selection' }}
       >
-        <HugeiconsIcon icon={theme === 'dark' ? Moon02Icon : Sun03Icon} size={14} />
+        {/* Show where you can go, not where you are: a moon in light mode, a sun in dark. */}
+        <HugeiconsIcon icon={theme === 'dark' ? Sun03Icon : Moon02Icon} size={17} strokeWidth={1.6} />
       </span>
-      <Button
-        type="button"
-        onClick={event => setThemeMode('light', event)}
-        variant="ghost" size="icon" className="relative h-11 w-8 shrink-0 text-muted-foreground hover:bg-transparent"
-        aria-label={ui.lightMode} aria-pressed={theme === 'light'}
-      >
-        <HugeiconsIcon icon={Sun03Icon} size={14} className={theme === 'light' ? 'opacity-0' : 'relative'} />
-      </Button>
-      <Button
-        type="button"
-        onClick={event => setThemeMode('dark', event)}
-        variant="ghost" size="icon" className="relative h-11 w-8 shrink-0 text-muted-foreground hover:bg-transparent"
-        aria-label={ui.darkMode} aria-pressed={theme === 'dark'}
-      >
-        <HugeiconsIcon icon={Moon02Icon} size={14} className={theme === 'dark' ? 'opacity-0' : 'relative'} />
-      </Button>
-    </div>
+    </Button>
   );
 }

@@ -45,7 +45,7 @@ export function PublicationList({ publications, page }: Props) {
     {page ? (
       <header className="page-intro pb-12 sm:pb-16" data-viewport-reveal>
         <p className="type-label">{site.name}</p>
-        <h1 className="type-title mt-3">{page.title}</h1>
+        <h1 className="type-title mt-3">{page.title.replace(/\.$/, "")}{page.title.endsWith(".") && <span className="title-dot">.</span>}</h1>
         <p className="type-lead mt-3">{page.description}</p>
         {nav}
       </header>
