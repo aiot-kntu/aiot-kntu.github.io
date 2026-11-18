@@ -1,43 +1,32 @@
 """Build favicons, touch icons and the social preview image.
 
-Run from the repo root:  python3 scripts/brand/build-icons.py
+Run from the repo root, after build-logo.py:  python3 scripts/brand/build-icons.py
 Needs `rsvg-convert` (brew install librsvg). Writes into public/.
 
-The favicon is option A from the Figma board "Favicon — proposals":
-the globe ring, one meridian and the two antennas, with strokes about
-three times heavier than the full logo so they survive at 16px.
+Small icons use brand/logo/favicon-color.svg, the heavier cut of the mark;
+touch icons use the full-weight icon. public/favicon.svg itself is written by
+build-logo.py because it follows the browser's colour scheme.
 """
 import re
 import struct
 import subprocess
 from pathlib import Path
 
-PUBLIC = Path("public")
-INK, PAPER = "#09090B", "#FFFFFF"
-DARK_INK = "#FAFAFA"
-
-# Mark geometry, in the logo's own units (globe centre 99,99, radius 80).
-SCALE, TOP, STROKE, DOT, MERIDIAN_RX = 0.4, 6, 6, 6, 42
+PUBLIC, BRAND = Path("public"), Path("brand/logo")
+PAPER = "#FFFFFF"
 
 
-def mark(size: int, ink_class: bool = False, color: str = INK, inset: float = 0) -> str:
-    """The mark drawn inside a size×size box; `inset` shrinks it toward the centre."""
-    s = SCALE * (1 - 2 * inset)
-    tx = 50 - 99 * s
-    ty = TOP * (1 - 2 * inset) + 100 * inset + 25 * s
-    sw = STROKE / SCALE
-    dot = DOT / SCALE
-    stroke = 'class="i"' if ink_class else f'stroke="{color}"'
-    fill = 'class="d"' if ink_class else f'fill="{color}"'
-    return (
-        f'<g transform="scale({size / 100}) translate({tx:.3f} {ty:.3f}) scale({s:.4f})">'
-        f'<g {stroke} stroke-width="{sw:.2f}" fill="none">'
-        f'<circle cx="99" cy="99" r="80"/>'
-        f'<ellipse cx="99" cy="99" rx="{MERIDIAN_RX}" ry="80"/>'
-        f'<path d="M18.7 99V-14M179.3 99V-14" stroke-linecap="round"/></g>'
-        f'<circle {fill} cx="18.7" cy="-18" r="{dot:.2f}"/>'
-        f'<circle {fill} cx="179.3" cy="-18" r="{dot:.2f}"/></g>'
-    )
+def placed(file: str, width: int, height: int | None = None, inset: float = 0) -> str:
+    """The SVG `file` fitted, centred, into a width×height box (square if no
+    height), leaving `inset` of the box's width and height empty on each side."""
+    height = height or width
+    src = (BRAND / file).read_text()
+    x, y, w, h = (float(v) for v in re.search(r'viewBox="([^"]+)"', src).group(1).split())
+    inner = re.sub(r"^.*?<svg[^>]*>|</svg>\s*$", "", src, flags=re.S)
+    k = min(width * (1 - 2 * inset) / w, height * (1 - 2 * inset) / h)
+    tx = (width - w * k) / 2 - x * k
+    ty = (height - h * k) / 2 - y * k
+    return f'<g transform="translate({tx:.3f} {ty:.3f}) scale({k:.4f})">{inner}</g>'
 
 
 def svg(size: int, body: str, extra: str = "") -> str:
@@ -67,39 +56,23 @@ def ico(pngs: list[tuple[int, bytes]], out: Path) -> None:
     out.write_bytes(header + entries + blobs)
 
 
-# 1. favicon.svg follows the browser's colour scheme.
-style = (
-    f"<style>.i{{stroke:{INK}}}.d{{fill:{INK}}}"
-    f"@media (prefers-color-scheme:dark){{.i{{stroke:{DARK_INK}}}.d{{fill:{DARK_INK}}}}}</style>"
-)
-(PUBLIC / "favicon.svg").write_text(svg(100, mark(100, ink_class=True), style) + "\n")
-
-# 2. favicon.ico for browsers and crawlers that ignore SVG icons.
+# 1. favicon.ico for browsers and crawlers that ignore SVG icons.
 tmp = Path("/tmp/aiot-icons"); tmp.mkdir(exist_ok=True)
-ico([(n, png(svg(n, mark(n)), tmp / f"{n}.png", n)) for n in (16, 32, 48)], PUBLIC / "favicon.ico")
+ico([(n, png(svg(n, placed("favicon-color.svg", n)), tmp / f"{n}.png", n)) for n in (16, 32, 48)], PUBLIC / "favicon.ico")
 
-# 3. Touch and manifest icons: ink mark on a solid white square, padded,
+# 2. Touch and manifest icons: colour mark on a solid white square, padded,
 #    because iOS and Android crop their own rounded shape.
 for name, size in (("apple-touch-icon.png", 180), ("icon-192.png", 192), ("icon-512.png", 512)):
     tile = f'<rect width="{size}" height="{size}" fill="{PAPER}"/>'
-    png(svg(size, tile + mark(size, inset=0.14)), PUBLIC / name, size)
+    png(svg(size, tile + placed("icon-color.svg", size, inset=0.14)), PUBLIC / name, size)
 
-# 4. Social preview (1200×630): the full logo lockup, centred, with the lab's name.
-logo = (PUBLIC / "logo.svg").read_text()
-view = [float(v) for v in re.search(r'viewBox="([^"]+)"', logo).group(1).split()]
-inner = re.sub(r"^.*?<svg[^>]*>|</svg>\s*$", "", logo, flags=re.S)
-lockup_h = 300
-k = lockup_h / view[3]
-lx = (1200 - view[2] * k) / 2 - view[0] * k
-ly = 90 - view[1] * k
+# 3. Social preview (1200×630): the horizontal lockup, centred, with the university.
 og = (
     '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">'
     f'<rect width="1200" height="630" fill="{PAPER}"/>'
-    f'<g fill="none" transform="translate({lx:.2f} {ly:.2f}) scale({k:.4f})">{inner}</g>'
-    f'<text x="600" y="500" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial" '
-    f'font-size="40" font-weight="500" fill="{INK}" letter-spacing="-0.5">The Intelligence of Things Lab</text>'
-    f'<text x="600" y="548" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial" '
-    f'font-size="24" fill="#71717A">K. N. Toosi University of Technology</text>'
+    f'<g transform="translate(0 -40)">{placed("logo-horizontal.svg", 1200, 630, inset=0.1)}</g>'
+    '<text x="600" y="560" text-anchor="middle" font-family="Geist, Helvetica Neue, Helvetica, Arial" '
+    'font-size="26" fill="#0F3B82" opacity=".75">K. N. Toosi University of Technology</text>'
     "</svg>"
 )
 png(og, PUBLIC / "og-image.png", 1200, 630)

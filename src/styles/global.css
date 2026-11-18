@@ -12,7 +12,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 224 79% 45%;
+    --primary: 217 79% 28%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -24,16 +24,16 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5% 93.5%;
     --input: 240 5.9% 90%;
-    --ring: 224 79% 45%;
+    --ring: 217 79% 28%;
     --radius: 0.75rem;
     /*
-     * Lab palette, picked in OKLCH so every stop has matched lightness:
-     * cobalt #184ACE → azure #0099F2 → aqua #28D6DF → mint #2CDCAF.
-     * --brand is cobalt; --signal is mint darkened for text on white.
+     * Brand palette from the intelli-things logo: navy #0F3B82 and teal #00B894.
+     * --brand is navy. --signal is the teal, darkened to #00846A in light mode
+     * so it passes 4.5:1 as text on white; dark mode uses the logo teal itself.
      */
-    --brand: 224 79% 45%;
-    --signal: 167 100% 29%;
-    --brand-soft: 215 100% 97%;
+    --brand: 217 79% 28%;
+    --signal: 168 100% 26%;
+    --brand-soft: 217 70% 97%;
   }
   .dark {
     color-scheme: dark;
@@ -43,7 +43,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 219 100% 72%;
+    --primary: 217 75% 68%;
     --primary-foreground: 240 10% 3.9%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -55,10 +55,10 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 4% 13%;
     --input: 240 3.7% 15.9%;
-    --ring: 219 100% 72%;
-    --brand: 219 100% 72%;
-    --signal: 163 71% 59%;
-    --brand-soft: 221 49% 14%;
+    --ring: 217 75% 68%;
+    --brand: 217 75% 68%;
+    --signal: 168 100% 36%;
+    --brand-soft: 217 50% 14%;
   }
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
@@ -101,7 +101,7 @@
   /* Dotted rule that draws itself in as the heading scrolls into view. */
   .section-rule {
     @apply h-px min-w-3 flex-1;
-    background: linear-gradient(in oklch 90deg, #184ACE, #0099F2 35%, #2CDCAF 70%, hsl(var(--muted-foreground) / 0.25));
+    background: linear-gradient(in oklch 90deg, hsl(var(--brand)), hsl(var(--signal)) 60%, hsl(var(--muted-foreground) / 0.25));
     -webkit-mask: radial-gradient(circle, #000 0.6px, transparent 0.9px) 0 0 / 5px 1px repeat-x;
     mask: radial-gradient(circle, #000 0.6px, transparent 0.9px) 0 0 / 5px 1px repeat-x;
     transform-origin: left center;

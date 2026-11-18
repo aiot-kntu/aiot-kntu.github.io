@@ -1,14 +1,10 @@
-/* The four meridians animate natively in SVG; the frame and type stay still. */
-[data-logo-loop='true'] .logo-rest-meridian {
-  display: none;
+/* Logo colours: navy ring, star and type with teal nodes and meridians.
+   In dark mode the navy parts turn white, like the reversed logo. */
+:root {
+  --logo-ink: #0f3b82;
+  --logo-accent: #00b894;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .logo-loop-meridians {
-    display: none;
-  }
-
-  [data-logo-loop='true'] .logo-rest-meridian {
-    display: initial;
-  }
+.dark {
+  --logo-ink: #ffffff;
 }

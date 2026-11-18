@@ -1,7 +1,7 @@
 ---
 /**
  * Aurora: a slow mesh gradient behind the top of every page.
- * Four soft colour fields (cobalt, azure, aqua, mint) drift independently,
+ * Four soft colour fields, from the logo's navy through to its teal, drift independently,
  * are blended in OKLCH, then a fine film grain sits on top so the
  * gradient reads as light on paper instead of a flat CSS fill.
  */
@@ -46,24 +46,24 @@
     mix-blend-mode: normal;
     will-change: transform;
   }
-  .b1 { /* cobalt */
+  .b1 { /* navy #0F3B82 */
     width: 52%; height: 70%; left: 4%; top: 18%;
-    background: radial-gradient(in oklch closest-side, oklch(0.47 0.21 264), oklch(0.47 0.21 264 / 0));
+    background: radial-gradient(in oklch closest-side, oklch(0.42 0.14 262), oklch(0.42 0.14 262 / 0));
     animation: drift-a 26s ease-in-out infinite alternate;
   }
-  .b2 { /* azure */
+  .b2 { /* navy → teal, halfway */
     width: 44%; height: 62%; left: 30%; top: 8%;
-    background: radial-gradient(in oklch closest-side, oklch(0.66 0.17 245), oklch(0.66 0.17 245 / 0));
+    background: radial-gradient(in oklch closest-side, oklch(0.56 0.12 225), oklch(0.56 0.12 225 / 0));
     animation: drift-b 32s ease-in-out infinite alternate;
   }
-  .b3 { /* aqua */
+  .b3 { /* teal #00B894 */
     width: 40%; height: 58%; left: 52%; top: 22%;
-    background: radial-gradient(in oklch closest-side, oklch(0.80 0.13 200), oklch(0.80 0.13 200 / 0));
+    background: radial-gradient(in oklch closest-side, oklch(0.70 0.15 170), oklch(0.70 0.15 170 / 0));
     animation: drift-c 29s ease-in-out infinite alternate;
   }
-  .b4 { /* mint */
+  .b4 { /* light teal */
     width: 38%; height: 60%; left: 64%; top: 4%;
-    background: radial-gradient(in oklch closest-side, oklch(0.80 0.15 170), oklch(0.80 0.15 170 / 0));
+    background: radial-gradient(in oklch closest-side, oklch(0.82 0.11 172), oklch(0.82 0.11 172 / 0));
     animation: drift-d 35s ease-in-out infinite alternate;
   }
 
