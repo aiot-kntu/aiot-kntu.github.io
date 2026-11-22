@@ -1,8 +1,8 @@
 ---
 name: Mona Fazeli
 profile: https://iot-kntu.github.io/projects/013_fazeli_mona/
-group: msc
+group: Alumni
 order: 1
-role: MSc researcher
+role: Msc
 ---
 
