@@ -1,8 +1,8 @@
 ---
 name: Azita N. Rouhi
 profile: https://iot-kntu.github.io/projects/015_Rouhi_Azita/
-group: msc
+group: Alumni
 order: 3
-role: MSc researcher
+role: MSc
 ---
 
