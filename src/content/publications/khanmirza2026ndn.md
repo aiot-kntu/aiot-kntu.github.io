@@ -6,7 +6,6 @@ authors:
   - Mohsen Shakibafar
   - Hamed Khanmirza
   - Mohamed Ahmed M. Hail
-venue: -
 order: 0
 featured: true
 ---
