@@ -11,6 +11,7 @@ export interface LabPublication {
   venue?: string;
   doi?: string;
   url?: string;
+  code?: string;
   featured?: boolean;
   bibtex: string;
 }

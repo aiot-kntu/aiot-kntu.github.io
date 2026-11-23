@@ -7,12 +7,10 @@ type MemberEntry = Awaited<ReturnType<typeof getCollection<'members'>>>[number];
 // Decides display order inside each people group (director, phd, msc, alumni).
 // Return negative if `a` comes first, positive if `b` comes first.
 function compareMembers(a: MemberEntry, b: MemberEntry): number {
-  // Newest first. Members with a `year` sort by it; members without one count as
-  // newest and sort by their file number prefix (e.g. "22_msc_..."), i.e. the order
-  // their files were added. Filesystem dates are unusable: git checkout resets them.
-  const year = (m: MemberEntry) => m.data.year ?? Infinity;
-  const fileNo = (m: MemberEntry) => Number.parseInt(m.id, 10);
-  return (year(b) - year(a) || 0) || fileNo(b) - fileNo(a) || a.id.localeCompare(b.id);
+  // Newest first by university entry year, taken from the filename prefix
+  // (e.g. "2023_msc_jane-doe.md"). Same entry year falls back to filename order.
+  const entryYear = (m: MemberEntry) => Number.parseInt(m.id, 10) || 0;
+  return entryYear(b) - entryYear(a) || a.id.localeCompare(b.id);
 }
 
 export async function getMembers() {

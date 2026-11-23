@@ -28,7 +28,7 @@ const publications = defineCollection({
   schema: z.object({
     ...ordered, title: z.string(), authors: z.array(z.string()).min(1), citationAuthors: z.string(),
     year: z.number().int(), status: z.string(), venue: z.string().optional(), doi: z.string().optional(),
-    url: optionalLink.optional(), featured: z.boolean().default(false),
+    url: optionalLink.optional(), code: optionalLink.optional(), featured: z.boolean().default(false),
   }),
 });
 const updates = defineCollection({

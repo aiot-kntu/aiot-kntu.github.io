@@ -2,6 +2,5 @@
 name: Mohammad Javad Izadi
 topic: Paxos on low-power wireless networks
 group: msc
-year: 2024
 role: MSc researcher
 ---

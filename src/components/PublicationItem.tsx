@@ -40,6 +40,9 @@ export function PublicationItem({ pub }: Props) {
         {paperUrl && <a href={paperUrl} target="_blank" rel="noopener noreferrer" aria-label={text(ui.readPaperLabel, { title: pub.title })} className="inline-flex min-h-11 items-center gap-1.5 text-[13px] font-medium underline decoration-border underline-offset-4 hover:decoration-foreground">
           {ui.readPaper}<span aria-hidden="true">↗</span>
         </a>}
+        {pub.code && <a href={pub.code} target="_blank" rel="noopener noreferrer" aria-label={text(ui.viewCodeLabel, { title: pub.title })} className="inline-flex min-h-11 items-center gap-1.5 text-[13px] font-medium underline decoration-border underline-offset-4 hover:decoration-foreground">
+          {ui.viewCode}<span aria-hidden="true">↗</span>
+        </a>}
         <button type="button" className="inline-flex h-8 items-center gap-2 rounded-md border border-border bg-transparent px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent motion-reduce:transition-none" onClick={() => setShowBibtex(open => !open)} aria-expanded={showBibtex} aria-controls={citationId} aria-label={text(labels.bibtexLabel, { title: pub.title })}>
           {labels.bibtex}<span aria-hidden="true" className="font-mono">{showBibtex ? '−' : '+'}</span>
         </button>
