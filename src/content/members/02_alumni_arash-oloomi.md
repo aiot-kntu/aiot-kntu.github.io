@@ -5,7 +5,7 @@ image: /images/people/arash-oloomi.webp
 year: 2020
 topic: Live streaming over SDN
 group: alumni
-order: 7
+order: 2
 role: MSc
 ---
 
