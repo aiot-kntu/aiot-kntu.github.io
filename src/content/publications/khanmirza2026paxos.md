@@ -6,6 +6,7 @@ authors:
   - AHMED HADI ALGHAZALI
   - AMIR HOSSEIN SADEGHI
   - HAMED KHANMIRZA
+citationAuthors: Alghazzali, Ahmed;Sadeghi Amir Hossein;Khanmirza
 order: 0
 featured: true
 ---

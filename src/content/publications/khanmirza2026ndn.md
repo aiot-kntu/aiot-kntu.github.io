@@ -7,6 +7,7 @@ authors:
   - Hamed Khanmirza
   - Mohamed Ahmed M. Hail
 venue: Computer Networks
+citationAuthors: Shakibafar, Mohsen;Khanmirza, Hamed;Hail Mohammed
 order: 0
 featured: true
 ---

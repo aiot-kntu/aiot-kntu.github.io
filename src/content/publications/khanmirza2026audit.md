@@ -7,6 +7,7 @@ authors:
   - Hamed Khanmirza
   - Mohamed Ahmed Hail
 venue: IEEE AIoT
+citationAuthors: Shakibafar, Mohsen;Khanmirza, Hamed;Hail Mohammed
 order: 0
 featured: true
 ---
