@@ -12,7 +12,7 @@ studies:
     date: February 2022
     code: https://github.com/aiot-kntu/controlled-BlueFlood
 publicationIds:
-  - khanmirza2022leader
+  - khanmirza2026leader
   - khanmirza2022flood
 order: 1
 ---
