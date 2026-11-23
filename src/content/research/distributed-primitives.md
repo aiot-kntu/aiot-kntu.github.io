@@ -5,11 +5,12 @@ area: Internet of Things
 studies:
   - title: Leader Election to Reduce Piconet Interference
     researcher: Mahdi Golshani
+    code: https://github.com/aiot-kntu/ble5-master-selection
   - title: Implementing a Distributed Publish and Event Matching System in BLE Networks with Controlled
       Flooding
     researcher: Salman Maaroufi
     date: February 2022
-    code: https://github.com/iot-kntu/controlled-BlueFlood
+    code: https://github.com/aiot-kntu/controlled-BlueFlood
 publicationIds:
   - khanmirza2022leader
   - khanmirza2022flood
