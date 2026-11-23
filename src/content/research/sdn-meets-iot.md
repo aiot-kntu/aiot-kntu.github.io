@@ -17,6 +17,6 @@ studies:
     researcher: Afshin Yousefi
 publicationIds:
   - khanmirza2022interpiconet
-order: 1
+order: 2
 ---
 We bring software-defined networking to IoT protocols and algorithms, and evaluate them on a real testbed.

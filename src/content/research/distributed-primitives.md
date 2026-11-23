@@ -14,6 +14,6 @@ studies:
 publicationIds:
   - khanmirza2022leader
   - khanmirza2022flood
-order: 0
+order: 1
 ---
 We implement and measure distributed algorithms in IoT networks, with a focus on Bluetooth Low Energy 5.0.
