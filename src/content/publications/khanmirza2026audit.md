@@ -5,7 +5,7 @@ title: "Auditable In-Network Cache Gain for Federated Learning over NDN in Edge 
 authors:
   - Mohsen Shakibafar
   - Hamed Khanmirza
-  - Mohamed Ahmed M. Hail
+  - Mohamed Ahmed Hail
 venue: IEEE AIoT
 order: 0
 featured: true

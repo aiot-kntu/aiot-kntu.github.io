@@ -6,6 +6,7 @@ authors:
   - Mohsen Shakibafar
   - Hamed Khanmirza
   - Mohamed Ahmed M. Hail
+venue: Computer Networks
 order: 0
 featured: true
 ---
