@@ -2,6 +2,6 @@
 name: Mahdi Nozad
 topic: Retail object detection with contrastive learning
 group: msc
-order: 3
+year: 2024
 role: MSc researcher
 ---

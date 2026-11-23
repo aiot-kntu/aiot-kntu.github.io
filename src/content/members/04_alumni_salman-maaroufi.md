@@ -5,7 +5,6 @@ image: /images/people/salman-maaroufi.webp
 year: 2021
 topic: CCN on BLE with controlled flooding
 group: alumni
-order: 4
 role: MSc
 ---
 

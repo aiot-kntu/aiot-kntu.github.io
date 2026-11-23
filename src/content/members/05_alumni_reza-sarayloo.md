@@ -5,7 +5,6 @@ image: /images/people/reza-sarayloo.webp
 year: 2021
 topic: Mitigating interpiconet interference
 group: alumni
-order: 5
 role: MSc
 ---
 

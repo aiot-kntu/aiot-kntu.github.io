@@ -5,7 +5,6 @@ image: /images/people/ahmad-algazzali.webp
 year: 2018
 affiliation: University of Kufa
 group: phd
-order: 3
 role: PHD
 ---
 

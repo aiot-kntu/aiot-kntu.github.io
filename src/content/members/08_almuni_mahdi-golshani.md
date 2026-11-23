@@ -5,7 +5,6 @@ image: /images/people/mahdi-golshani.webp
 year: 2022
 topic: Leader election in BLE to reduce piconets interference
 group: alumni
-order: 8
 role: MSc
 ---
 
